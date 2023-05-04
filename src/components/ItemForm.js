@@ -1,11 +1,31 @@
 import React, { useState } from "react";
 
-function ItemForm() {
-  const [name, setName] = useState("");
+function ItemForm({ onAddItem }) {
   const [category, setCategory] = useState("Produce");
+  const [name, setName] = useState("");
+  
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    const itemData = {
+      name: name,
+      isInCart: false,
+      category: category,
+      
+    };
+    fetch("http://localhost:4000/items", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(itemData),
+    })
+      .then((r) => r.json())
+      .then((newItem) => onAddItem(newItem));
+  }
 
   return (
-    <form className="NewItem">
+    <form className="NewItem" onSubmit={handleSubmit}>
       <label>
         Name:
         <input
@@ -33,5 +53,5 @@ function ItemForm() {
     </form>
   );
 }
-
+//finish
 export default ItemForm;
